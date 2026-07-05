@@ -456,11 +456,16 @@ const mthsArr=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov"
 document.getElementById('loading-day').innerText=`${daysArr[dInit.getDay()]}, ${dInit.getDate()} ${mthsArr[dInit.getMonth()]} ${dInit.getFullYear()}`;
 document.getElementById('loading-time').innerText=dInit.toTimeString().split(' ')[0];
 
-window.onload=()=>{
+function hideLoader(){const l=document.getElementById('startupLoader');if(l&&!l.classList.contains('hidden')){l.classList.add('opacity-0');setTimeout(()=>l.classList.add('hidden'),700)}}
+function initApp(){
 initDB();loadProducts();syncAppName();syncFooterText();runTimeSync();setupScreensaver();initParticles();
 document.getElementById('promo-text').value=localStorage.getItem('POS_PROMO_TEXT')||`Halo Kak! Ada Promo Spesial dari ${appName}. Dapatkan diskon 10% untuk transaksi Anda selanjutnya. Kunjungi kami kembali ya!`;
-setTimeout(()=>{const l=document.getElementById('startupLoader');l.classList.add('opacity-0');setTimeout(()=>l.classList.add('hidden'),700)},3000);
-};
+setTimeout(hideLoader,1500);
+}
+// Start immediately on DOM ready - don't wait for slow CDN resources
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initApp)}else{initApp()}
+// Fallback: force-hide loader after 4s no matter what
+setTimeout(hideLoader,4000);
 
 // PARTICLE BACKGROUND
 function initParticles(){
